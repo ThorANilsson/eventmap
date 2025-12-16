@@ -1,6 +1,5 @@
 ﻿using EventmapApiDemo.Services;
 using Microsoft.AspNetCore.Mvc;
-using Ticketmaster.Discovery.Models;
 
 namespace EventmapApiDemo.Controllers;
 
