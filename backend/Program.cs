@@ -15,10 +15,14 @@ if (string.IsNullOrEmpty(apiKey))
     Environment.Exit(1);
 }
 
+builder.Services.AddHttpClient<TicketmasterService>(client =>
+{
+    client.BaseAddress = new Uri("https://app.ticketmaster.com/discovery/v2/");
+});
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<TicketmasterService>();
 
 builder.Services.AddCors(options =>
 {
