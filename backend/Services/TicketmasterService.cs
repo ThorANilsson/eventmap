@@ -20,7 +20,6 @@ namespace EventmapApiDemo.Services
 
         public async Task<List<Event>> GetEvents(double lat, double lng)
         {
-            List<Event> events = new List<Event>();
             string units = "km";
             int radius = 20;
             string geoHash = _geohasher.Encode(lat, lng);
@@ -32,8 +31,20 @@ namespace EventmapApiDemo.Services
                 var tmResponse = response.Content.ReadFromJsonAsync<TicketmasterResponse>();
                 return tmResponse.Result?.Embedded?.Events ?? new List<Event>();
             }
+            throw new BadHttpRequestException($"Error in TicketmasterService: {response.StatusCode}");
+        }
 
-            return events;
-        } 
+        public async Task<Event> GetEvent(string id)
+        {
+            string relativeUrl = $"events/{id}.json?apikey={_options.Value.ApiKey}";
+            
+            var response = await _httpClient.GetAsync(relativeUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var tmResponse = response.Content.ReadFromJsonAsync<Event>();
+                return tmResponse.Result ??  new Event();
+            }
+            throw new BadHttpRequestException($"Error in TicketmasterService: {response.StatusCode}");
+        }
     }
 }

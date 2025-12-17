@@ -23,6 +23,13 @@ public class EventsController : ControllerBase
 
        return events;
     }
+
+    [HttpGet("{id}")]
+    public async Task<Event> Get(string id)
+    {
+        Event e = await _ticketmasterService.GetEvent(id);
+        return e;
+    }
     
 
     [HttpGet("test")]
