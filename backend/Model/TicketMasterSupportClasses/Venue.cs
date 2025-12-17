@@ -1,31 +1,66 @@
+using System.Net.Mime;
+using System.Text.Json.Serialization;
 using EventmapApiDemo.Model.TicketMasterClasses;
 
 namespace EventmapApiDemo.Model;
 
 public class Venue
 {
-    public string name { get; set; }
-    public string id { get; set; }
-    public string url { get; set; }
-    public string postalCode { get; set; }
-    public City city { get; set; }
-    public Country country { get; set; }
-    public Address address { get; set; }
-    public Location location { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
+    
+    [JsonPropertyName("distance")]
+    public double Distance { get; set; }
+
+    [JsonPropertyName("units")]
+    public string Units { get; set; }
+
+    [JsonPropertyName("postalCode")]
+    public string PostalCode { get; set; }
+
+    [JsonPropertyName("timezone")]
+    public string Timezone { get; set; }
+
+    [JsonPropertyName("city")]
+    public City City { get; set; }
+
+    [JsonPropertyName("country")]
+    public Country Country { get; set; }
+
+    [JsonPropertyName("address")]
+    public Address Address { get; set; }
+
+    [JsonPropertyName("location")]
+    public Location Location { get; set; }
 }
 
 public class City 
 {
-    public string name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }
 public class Country
 {
-    public string name { get; set; }
-    public string code { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
+    [JsonPropertyName("countryCode")]
+    public string CountryCode { get; set; }
 }
 public class Address
 {
-    public string line1 { get; set; }
-    public string line2 { get; set; }
-    public string line3 { get; set; }
+    [JsonPropertyName("line1")]
+    public string? Line1 { get; set; }
+    
+    [JsonPropertyName("line2")]
+    public string? Line2 { get; set; }
+    
+    [JsonPropertyName("line3")]
+    public string? Line3 { get; set; }
 }

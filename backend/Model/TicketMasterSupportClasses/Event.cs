@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using EventmapApiDemo.Model.TicketMasterClasses;
+using EventmapApiDemo.Model.TicketMasterSupportClasses;
 
 namespace EventmapApiDemo.Model;
 
@@ -31,5 +32,8 @@ public class Event
     
     [JsonPropertyName("dates")]
     public Dates Dates { get; set; }
+    
+    [JsonPropertyName("_embedded")]
+    public EventEmbedded Embedded { get; set; }
     
 }
