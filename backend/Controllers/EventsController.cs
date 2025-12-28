@@ -1,8 +1,8 @@
-﻿using EventmapApiDemo.Model;
-using EventmapApiDemo.Services;
+﻿using EventmapApi.Model;
+using EventmapApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventmapApiDemo.Controllers;
+namespace EventmapApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace EventmapApiDemo.Model.TicketMasterClasses;
+namespace EventmapApi.Model.TicketMasterClasses;
 
 public class SubGenre
 {

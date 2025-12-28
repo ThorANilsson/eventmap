@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using EventmapApiDemo.Model.TicketMasterClasses;
-using EventmapApiDemo.Model.TicketMasterSupportClasses;
+using EventmapApi.Model.TicketMasterClasses;
+using EventmapApi.Model.TicketMasterSupportClasses;
 
-namespace EventmapApiDemo.Model;
+namespace EventmapApi.Model;
 
 public class Event
 {

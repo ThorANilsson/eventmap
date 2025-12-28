@@ -1,9 +1,9 @@
-﻿using EventmapApiDemo.Model;
+﻿using EventmapApi.Model;
 using Geohash;
 using Microsoft.Extensions.Options;
 
 
-namespace EventmapApiDemo.Services
+namespace EventmapApi.Services
 {
     public class TicketmasterService
     {

@@ -1,4 +1,4 @@
-﻿namespace EventmapApiDemo
+﻿namespace EventmapApi
 {
     public class TicketmasterOptions
     {

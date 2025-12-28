@@ -1,8 +1,8 @@
 using System.Net.Mime;
 using System.Text.Json.Serialization;
-using EventmapApiDemo.Model.TicketMasterClasses;
+using EventmapApi.Model.TicketMasterClasses;
 
-namespace EventmapApiDemo.Model;
+namespace EventmapApi.Model;
 
 public class Venue
 {

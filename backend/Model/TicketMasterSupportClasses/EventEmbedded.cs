@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace EventmapApiDemo.Model.TicketMasterSupportClasses;
+namespace EventmapApi.Model.TicketMasterSupportClasses;
 
 public class EventEmbedded
 {

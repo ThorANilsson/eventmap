@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace EventmapApiDemo.Model;
+namespace EventmapApi.Model;
 
 public class TicketmasterResponse
 {

@@ -1,5 +1,5 @@
-using EventmapApiDemo;
-using EventmapApiDemo.Services;
+using EventmapApi;
+using EventmapApi.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
