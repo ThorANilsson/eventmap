@@ -1,6 +1,8 @@
 ﻿using EventmapApi.Model;
+using EventmapApi.Model.Requests;
 using EventmapApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using Scalar.AspNetCore;
 
 namespace EventmapApi.Controllers;
 
@@ -17,9 +19,9 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<Event>> Get(double lat, double lng)
+    public async Task<List<Event>> Get([FromQuery] GetEventsRequest request)
     {
-       List<Event> events = await _ticketmasterService.GetEvents(lat, lng);
+       List<Event> events = await _ticketmasterService.GetEvents(request);
 
        return events;
     }

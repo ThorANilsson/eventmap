@@ -1,4 +1,5 @@
 ﻿using EventmapApi.Model;
+using EventmapApi.Model.Requests;
 using Geohash;
 using Microsoft.Extensions.Options;
 
@@ -18,12 +19,11 @@ namespace EventmapApi.Services
             _options = options;
         }
 
-        public async Task<List<Event>> GetEvents(double lat, double lng)
+        public async Task<List<Event>> GetEvents(GetEventsRequest request)
         {
             string units = "km";
-            int radius = 20;
-            string geoHash = _geohasher.Encode(lat, lng);
-            string relativeUrl = $"events.json?apikey={_options.Value.ApiKey}&geoPoint={geoHash}&radius={radius}&unit={units}";
+            string geoHash = _geohasher.Encode(request.Latitude, request.Longitude);
+            string relativeUrl = $"events.json?apikey={_options.Value.ApiKey}&geoPoint={geoHash}&radius={request.Radius}&unit={units}";
             
             var response = await _httpClient.GetAsync(relativeUrl);
             if (response.IsSuccessStatusCode)
