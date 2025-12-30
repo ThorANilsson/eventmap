@@ -29,11 +29,17 @@ public class EventsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<Event>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<List<Event>> Get([FromQuery] GetEventsRequest request)
+    public async Task<ActionResult<List<Event>>> Get([FromQuery] GetEventsRequest request)
     {
-       List<Event> events = await _ticketmasterService.GetEvents(request);
-
-       return events;
+        try
+        {
+            List<Event> events = await _ticketmasterService.GetEvents(request);
+            return events;
+        }
+        catch (Exception e)
+        {
+            return Problem(statusCode: 500, title: e.Message);
+        }
     }
 
     [HttpGet("{id}")]
