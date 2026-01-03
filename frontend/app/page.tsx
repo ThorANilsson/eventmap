@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { SimpleEvent } from "@/types/simpleEvent";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -10,7 +10,7 @@ export default function Home() {
   const [map, setMap] = useState<L.Map | null>(null);
   const [center, setCenter] = useState<L.LatLng | null>(null);
   const [zoom, setZoom] = useState<number | null>(null);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<SimpleEvent[]>([]);
 
   const handleChange = (newCenter: L.LatLng, newZoom: number) => {
     setCenter(newCenter);
@@ -37,7 +37,7 @@ export default function Home() {
       }
       setEvents([]);
       const data = await res.json();
-      setEvents(data);
+      setEvents(data.events);
     } catch (err: any) {
       console.log(err);
       /* setError(err.message); */
@@ -66,7 +66,7 @@ export default function Home() {
       </div>
 
       <div style={{ flex: 1 }}>
-        <MapView onMapReady={setMap} onChange={handleChange} />
+        <MapView events={events} onMapReady={setMap} onChange={handleChange} />
       </div>
     </div>
   );
