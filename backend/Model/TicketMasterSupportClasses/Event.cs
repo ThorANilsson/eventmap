@@ -7,33 +7,33 @@ namespace EventmapApi.Model;
 public class Event
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
     [JsonPropertyName("description")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
     
     [JsonPropertyName("priceRanges")]
-    public List<PriceRange> PriceRanges { get; set; }
+    public List<PriceRange>? PriceRanges { get; set; }
     
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string? Id { get; set; }
     
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string? Url { get; set; }
     
     [JsonPropertyName("distance")]
     public double Distance { get; set; }
     
     [JsonPropertyName("location")]
-    public Location Location { get; set; }
+    public Location? Location { get; set; }
     
     [JsonPropertyName("classifications")]
-    public List<Classification> Classifications { get; set; }
+    public List<Classification>? Classifications { get; set; }
     
     [JsonPropertyName("dates")]
-    public Dates Dates { get; set; }
+    public Dates? Dates { get; set; }
     
     [JsonPropertyName("_embedded")]
-    public EventEmbedded Embedded { get; set; }
+    public EventEmbedded? Embedded { get; set; }
     
 }

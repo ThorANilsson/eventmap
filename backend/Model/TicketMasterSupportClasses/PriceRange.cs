@@ -5,7 +5,7 @@ namespace EventmapApi.Model.TicketMasterClasses;
 public class PriceRange
 {
     [JsonPropertyName("currency")]
-    string Currency { get; set; }
+    string? Currency { get; set; }
     
     [JsonPropertyName("max")]
     int Max { get; set; }

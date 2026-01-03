@@ -8,20 +8,20 @@ public class Classification
     public bool Primary { get; set; }
 
     [JsonPropertyName("segment")]
-    public Segment Segment { get; set; }
+    public Segment? Segment { get; set; }
 
     [JsonPropertyName("genre")]
-    public Genre Genre { get; set; }
+    public Genre? Genre { get; set; }
 
     [JsonPropertyName("subGenre")]
-    public SubGenre SubGenre { get; set; }
+    public SubGenre? SubGenre { get; set; }
 
     [JsonPropertyName("family")]
     public bool Family { get; set; }
 
     [JsonPropertyName("type")]
-    public Type Type { get; set; }
+    public Type? Type { get; set; }
 
     [JsonPropertyName("subType")]
-    public SubType SubType { get; set; }
+    public SubType? SubType { get; set; }
 }

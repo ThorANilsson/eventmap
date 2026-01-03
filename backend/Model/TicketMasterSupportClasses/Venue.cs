@@ -7,51 +7,51 @@ namespace EventmapApi.Model;
 public class Venue
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string? Url { get; set; }
     
     [JsonPropertyName("distance")]
     public double Distance { get; set; }
 
     [JsonPropertyName("units")]
-    public string Units { get; set; }
+    public string? Units { get; set; }
 
     [JsonPropertyName("postalCode")]
-    public string PostalCode { get; set; }
+    public string? PostalCode { get; set; }
 
     [JsonPropertyName("timezone")]
-    public string Timezone { get; set; }
+    public string? Timezone { get; set; }
 
     [JsonPropertyName("city")]
-    public City City { get; set; }
+    public City? City { get; set; }
 
     [JsonPropertyName("country")]
-    public Country Country { get; set; }
+    public Country? Country { get; set; }
 
     [JsonPropertyName("address")]
-    public Address Address { get; set; }
+    public Address? Address { get; set; }
 
     [JsonPropertyName("location")]
-    public Location Location { get; set; }
+    public Location? Location { get; set; }
 }
 
 public class City 
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 public class Country
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("countryCode")]
-    public string CountryCode { get; set; }
+    public string? CountryCode { get; set; }
 }
 public class Address
 {
