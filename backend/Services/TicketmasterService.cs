@@ -1,5 +1,7 @@
 ﻿using EventmapApi.Model;
 using EventmapApi.Model.Requests;
+using EventmapApi.Model.Responses;
+using EventmapApi.Model.Ticketmaster;
 using Geohash;
 using Microsoft.Extensions.Options;
 
@@ -19,22 +21,51 @@ namespace EventmapApi.Services
             _options = options;
         }
 
-        public async Task<List<Event>> GetEvents(GetEventsRequest request)
+        public async Task<GetEventsResponse?> GetEvents(GetEventsRequest request)
         {
             string units = "km";
             string geoHash = _geohasher.Encode(request.Latitude, request.Longitude);
-            string relativeUrl = $"events.json?apikey={_options.Value.ApiKey}&geoPoint={geoHash}&radius={request.Radius}&unit={units}";
-            
+            string latlong = $"{request.Latitude},{request.Longitude}";
+            string relativeUrl = $"events.json?" +
+                $"apikey={_options.Value.ApiKey}&" +
+                $"geoPoint={geoHash}&" +
+                $"radius={request.Radius}&" +
+                $"unit={units}&" +
+                $"size=100";
+
             var response = await _httpClient.GetAsync(relativeUrl);
             if (response.IsSuccessStatusCode)
             {
-                var tmResponse = response.Content.ReadFromJsonAsync<TicketmasterResponse>();
-                return tmResponse.Result?.Embedded?.Events ?? new List<Event>();
+                var tmResponse = await response.Content.ReadFromJsonAsync<SearchEventsResponse>();
+
+                if (tmResponse == null)
+                {
+                    throw new Exception("Response from Ticketmaster was null");
+                }
+
+                List<SimpleEvent> events = [];
+
+                foreach (var tmEvent in tmResponse.Embedded.Events)
+                {
+                    SimpleEvent simpleEvent = new()
+                    {
+                        Id = tmEvent.Id,
+                        Name = tmEvent.Name,
+                        VenueName = tmEvent.Embedded?.Venues.First().Name,
+                        Location = tmEvent.Embedded?.Venues.First().Location,
+                    };
+                    events.Add(simpleEvent);
+                }
+
+                return new GetEventsResponse
+                { 
+                    Events = events 
+                };
             }
-            throw new BadHttpRequestException($"Error in TicketmasterService: {response.StatusCode}");
+            throw new Exception("Could not get events from Ticketmaster API");
         }
 
-        public async Task<Event> GetEvent(string id)
+        /* public async Task<Event> GetEvent(string id)
         {
             string relativeUrl = $"events/{id}.json?apikey={_options.Value.ApiKey}";
             
@@ -42,9 +73,9 @@ namespace EventmapApi.Services
             if (response.IsSuccessStatusCode)
             {
                 var tmResponse = response.Content.ReadFromJsonAsync<Event>();
-                return tmResponse.Result ??  new Event();
+                return tmResponse.Result ?? new Event();
             }
             throw new BadHttpRequestException($"Error in TicketmasterService: {response.StatusCode}");
-        }
+        } */
     }
 }

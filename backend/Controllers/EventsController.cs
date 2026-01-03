@@ -1,8 +1,8 @@
-﻿using EventmapApi.Model;
-using EventmapApi.Model.Requests;
+﻿using EventmapApi.Model.Requests;
+using EventmapApi.Model.Responses;
+using EventmapApi.Model.Ticketmaster;
 using EventmapApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using Scalar.AspNetCore;
 
 namespace EventmapApi.Controllers;
 
@@ -27,14 +27,21 @@ public class EventsController : ControllerBase
     /// <response code="200">Returns the list of events.</response> 
     /// <response code="400">If the query parameters are invalid.</response>
     [HttpGet]
-    [ProducesResponseType(typeof(List<Event>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetEventsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<List<Event>>> Get([FromQuery] GetEventsRequest request)
+    public async Task<ActionResult<GetEventsResponse>> Get([FromQuery] GetEventsRequest request)
     {
         try
         {
-            List<Event> events = await _ticketmasterService.GetEvents(request);
-            return events;
+            var response = await _ticketmasterService.GetEvents(request);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                throw new Exception("Ticketmaster service returned null");
+            }
         }
         catch (Exception e)
         {
@@ -42,12 +49,12 @@ public class EventsController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    /* [HttpGet("{id}")]
     public async Task<Event> Get(string id)
     {
         Event e = await _ticketmasterService.GetEvent(id);
         return e;
-    }
+    } */
     
 
     [HttpGet("test")]
