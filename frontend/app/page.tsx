@@ -3,6 +3,7 @@
 import { SimpleEvent } from "@/types/simpleEvent";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import {FilterMenu} from "@/components/FilterMenu";
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false });
 
@@ -11,11 +12,21 @@ export default function Home() {
   const [center, setCenter] = useState<L.LatLng | null>(null);
   const [zoom, setZoom] = useState<number | null>(null);
   const [events, setEvents] = useState<SimpleEvent[]>([]);
+  
+  const [category, setCategory] = useState<string>("ALL");
+  const [subCategory, setSubCategory] = useState<string | null>(null);
 
   const handleChange = (newCenter: L.LatLng, newZoom: number) => {
     setCenter(newCenter);
     setZoom(newZoom);
   };
+  
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setSubCategory(null);
+  }
+  
+  /* Add filter logic for different categories*/
 
   function getCurrentRadius() {
     var mapBoundNorthEast = map.getBounds().getNorthEast();
@@ -54,17 +65,17 @@ export default function Home() {
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-      <div style={{ width: "350px", padding: "1rem" }}>
-        {center && zoom !== null && (
-          <>
-            <p>lat: {center.lat}</p>
-            <p>lng: {center.lng}</p>
-            <p>zoom: {zoom}</p>
-            <p>current radius: {getCurrentRadius()} km</p>
-          </>
-        )}
-      </div>
 
+      <FilterMenu 
+          center={center} 
+          zoom={zoom} 
+          radius={map ? getCurrentRadius() : 0} 
+          selectedCategory={category}
+          selectedSubCategory={subCategory}
+          onCategoryChange={handleCategoryChange}
+          onSubCategoryChange={setSubCategory}
+      />
+      
       <div style={{ flex: 1 }}>
         <MapView events={events} onMapReady={setMap} onChange={handleChange} />
       </div>
