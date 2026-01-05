@@ -20,6 +20,12 @@ builder.Services.AddHttpClient<TicketmasterService>(client =>
     client.BaseAddress = new Uri("https://app.ticketmaster.com/discovery/v2/");
 });
 
+builder.Services.AddHttpClient<WikipediaService>(client =>
+{
+    client.BaseAddress = new Uri("https://en.wikipedia.org/");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("Eventmap/1.0"); // Required by Wikipedia https://w.wiki/4wJS
+});
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpClient();
