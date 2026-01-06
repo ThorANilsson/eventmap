@@ -11,5 +11,9 @@ namespace EventmapApi.Model
         public string? VenueName { get; set; }
 
         public Location? Location { get; set; }
+        
+        public string? Category { get; set; }
+        
+        public string? Genre { get; set; }
     }
 }

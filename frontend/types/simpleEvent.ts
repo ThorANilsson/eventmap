@@ -15,5 +15,7 @@ export interface SimpleEvent {
     name?: string | null;
     venueName?: string | null;
     location?: Location | null;
+    category?: string | null;
+    genre?: string | null;
 }
 

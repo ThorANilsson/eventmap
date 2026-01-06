@@ -53,6 +53,8 @@ namespace EventmapApi.Services
                         Name = tmEvent.Name,
                         VenueName = tmEvent.Embedded?.Venues.First().Name,
                         Location = tmEvent.Embedded?.Venues.First().Location,
+                        Category = tmEvent.Classifications?.First().Segment?.Name,
+                        Genre = tmEvent.Classifications?.First().Genre?.Name,
                     };
                     events.Add(simpleEvent);
                 }
