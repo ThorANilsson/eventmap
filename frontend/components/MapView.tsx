@@ -13,6 +13,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { SimpleEvent } from "@/types/simpleEvent";
 import TicketmasterIcon from "./TicketmasterIcon";
+import {GroupedEvent} from "@/lib/eventUtils";
 
 interface MapViewProps {
   events: SimpleEvent[];

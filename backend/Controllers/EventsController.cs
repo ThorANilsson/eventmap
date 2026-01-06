@@ -48,15 +48,7 @@ public class EventsController : ControllerBase
             return Problem(statusCode: 500, title: e.Message);
         }
     }
-
-    /* [HttpGet("{id}")]
-    public async Task<Event> Get(string id)
-    {
-        Event e = await _ticketmasterService.GetEvent(id);
-        return e;
-    } */
     
-
     [HttpGet("test")]
     public IActionResult Test()
     {

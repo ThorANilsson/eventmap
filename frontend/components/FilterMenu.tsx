@@ -11,8 +11,10 @@ interface FilterMenuProps {
 
 const CATEGORIES = [
     { name: "ALL", subCategories: []},
-    { name: "Sports", subCategories: ["Football", "Hockey"] },
-    { name: "Music", subCategories: ["Rock", "Metal", "Jazz", "Pop"] },
+    { name: "Sports", subCategories: ["Football", "Hockey", "Other"] },
+    { name: "Music", subCategories: ["Rock", "Metal", "Jazz", "Pop", "Dance/Electronic", "Other"] },
+    { name: "Arts & Theatre", subCategories: ["Comedy", "Spectacular", "Theatre", "Other" ] },
+    { name: "Miscellaneous", subCategories: ["Food & Drink"]}
 ]
 
 export function FilterMenu({ center, zoom, radius, selectedCategory, selectedSubCategory, onCategoryChange, onSubCategoryChange }: FilterMenuProps ) {

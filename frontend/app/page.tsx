@@ -2,8 +2,11 @@
 
 import { SimpleEvent } from "@/types/simpleEvent";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import {FilterMenu} from "@/components/FilterMenu";
+import L from "leaflet";
+import * as eventUtil from "@/lib/eventUtils";
+import {groupedEventsByLocation} from "@/lib/eventUtils";
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false });
 
@@ -21,12 +24,25 @@ export default function Home() {
     setZoom(newZoom);
   };
   
+  const filterEvents = useMemo(() => {
+    if(category === "ALL") return events;
+    
+    setEvents(eventUtil.filterEventsByCategory(events, category, subCategory));
+   
+  }, [events, category, subCategory] );
+  
+  const groupEvents = useMemo(() => {
+    eventUtil.groupedEventsByLocation(events);
+  }, [events] );
+  
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setSubCategory(null);
   }
   
-  /* Add filter logic for different categories*/
+  const handleSubCategoryChange = (newSubCategory: string) => {
+    setSubCategory(newSubCategory);
+  }
 
   function getCurrentRadius() {
     var mapBoundNorthEast = map.getBounds().getNorthEast();
@@ -39,14 +55,13 @@ export default function Home() {
       /* setLoading(true);
       setError(null); */
       const res = await fetch(
-        `http://localhost:5120/Events?Radius=${getCurrentRadius()}&Latitude=${
-          center.lat
-        }&Longitude=${center.lng}`
+          `http://localhost:5120/Events?Radius=${getCurrentRadius()}
+                &Latitude=${center.lat}
+                &Longitude=${center.lng}`
       );
       if (!res.ok) {
         throw new Error(`API error: ${res.status}`);
       }
-      setEvents([]);
       const data = await res.json();
       setEvents(data.events);
     } catch (err: any) {
@@ -57,10 +72,12 @@ export default function Home() {
     }
   };
 
+
   useEffect(() => {
     if (!map) return;
-
+    
     fetchEvents();
+    
   }, [map, center, zoom]);
 
   return (
@@ -73,11 +90,11 @@ export default function Home() {
           selectedCategory={category}
           selectedSubCategory={subCategory}
           onCategoryChange={handleCategoryChange}
-          onSubCategoryChange={setSubCategory}
+          onSubCategoryChange={handleSubCategoryChange}
       />
       
       <div style={{ flex: 1 }}>
-        <MapView events={events} onMapReady={setMap} onChange={handleChange} />
+        <MapView events={filterEvents} onMapReady={setMap} onChange={handleChange} />
       </div>
     </div>
   );
