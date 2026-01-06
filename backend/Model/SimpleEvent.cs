@@ -15,5 +15,11 @@ namespace EventmapApi.Model
         public string? Category { get; set; }
         
         public string? Genre { get; set; }
+        
+        public DateTime? Date { get; set; }
+        
+        public string? ImageUrl { get; set; }
+        
+        public string? EventUrl { get; set; }
     }
 }

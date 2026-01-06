@@ -55,6 +55,9 @@ namespace EventmapApi.Services
                         Location = tmEvent.Embedded?.Venues.First().Location,
                         Category = tmEvent.Classifications?.First().Segment?.Name,
                         Genre = tmEvent.Classifications?.First().Genre?.Name,
+                        Date = tmEvent.Dates?.Start?.DateTime,
+                        ImageUrl = tmEvent.Images?.FirstOrDefault()?.Url,
+                        EventUrl = tmEvent.Url
                     };
                     events.Add(simpleEvent);
                 }
