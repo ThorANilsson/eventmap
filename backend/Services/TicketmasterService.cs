@@ -25,49 +25,62 @@ namespace EventmapApi.Services
         {
             string units = "km";
             string geoHash = _geohasher.Encode(request.Latitude, request.Longitude);
-            string latlong = $"{request.Latitude},{request.Longitude}";
-            string relativeUrl = $"events.json?" +
-                $"apikey={_options.Value.ApiKey}&" +
-                $"geoPoint={geoHash}&" +
-                $"radius={request.Radius}&" +
-                $"unit={units}&" +
-                $"size=100";
+            
+            List<SimpleEvent> allEvents = new List<SimpleEvent>();
 
-            var response = await _httpClient.GetAsync(relativeUrl);
-            if (response.IsSuccessStatusCode)
+            int totalPages = 1;
+
+            for (int i = 0; i < totalPages && i < 5; i++)
             {
-                var tmResponse = await response.Content.ReadFromJsonAsync<SearchEventsResponse>();
+                string relativeUrl = $"events.json?" +
+                    $"apikey={_options.Value.ApiKey}&" +
+                    $"geoPoint={geoHash}&" +
+                    $"radius={request.Radius}&" +
+                    $"unit={units}&" +
+                    $"size=100&" +
+                    $"page={i}"; 
 
-                if (tmResponse == null)
+                var response = await _httpClient.GetAsync(relativeUrl);
+                if (response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Response from Ticketmaster was null");
-                }
+                    var tmResponse = await response.Content.ReadFromJsonAsync<SearchEventsResponse>();
 
-                List<SimpleEvent> events = [];
-
-                foreach (var tmEvent in tmResponse.Embedded.Events)
-                {
-                    SimpleEvent simpleEvent = new()
+                    if (tmResponse == null)
                     {
-                        Id = tmEvent.Id,
-                        Name = tmEvent.Name,
-                        VenueName = tmEvent.Embedded?.Venues.First().Name,
-                        Location = tmEvent.Embedded?.Venues.First().Location,
-                        Category = tmEvent.Classifications?.First().Segment?.Name,
-                        Genre = tmEvent.Classifications?.First().Genre?.Name,
-                        Date = tmEvent.Dates?.Start?.DateTime,
-                        ImageUrl = tmEvent.Images?.FirstOrDefault()?.Url,
-                        EventUrl = tmEvent.Url
-                    };
-                    events.Add(simpleEvent);
-                }
+                        continue;
+                    }
 
-                return new GetEventsResponse
-                { 
-                    Events = events 
-                };
+                    if (i == 0 && tmResponse.Page != null)
+                    {
+                        totalPages = tmResponse.Page.TotalPages;
+                    }
+
+                    if (tmResponse.Embedded?.Events != null)
+                    {
+                        foreach (var tmEvent in tmResponse.Embedded.Events)
+                        {
+                            SimpleEvent simpleEvent = new()
+                            {
+                                Id = tmEvent.Id,
+                                Name = tmEvent.Name,
+                                VenueName = tmEvent.Embedded?.Venues.First().Name,
+                                Location = tmEvent.Embedded?.Venues.First().Location,
+                                Category = tmEvent.Classifications?.First().Segment?.Name,
+                                Genre = tmEvent.Classifications?.First().Genre?.Name,
+                                Date = tmEvent.Dates?.Start?.DateTime,
+                                ImageUrl = tmEvent.Images?.FirstOrDefault()?.Url,
+                                EventUrl = tmEvent.Url
+                            };
+                            allEvents.Add(simpleEvent);
+                        }
+                    }
+                }
             }
-            throw new Exception("Could not get events from Ticketmaster API");
+
+            return new GetEventsResponse
+            { 
+                Events = allEvents 
+            };
         }
 
         /* public async Task<Event> GetEvent(string id)
