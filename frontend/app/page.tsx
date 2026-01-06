@@ -27,7 +27,7 @@ export default function Home() {
   const filterEvents = useMemo(() => {
     if(category === "ALL") return events;
     
-    setEvents(eventUtil.filterEventsByCategory(events, category, subCategory));
+    return eventUtil.filterEventsByCategory(events, category, subCategory);
    
   }, [events, category, subCategory] );
   
