@@ -3,11 +3,11 @@
 import { SimpleEvent } from "@/types/simpleEvent";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
-import { FilterMenu } from "@/components/FilterMenu";
 import L from "leaflet";
-import * as eventUtil from "@/lib/eventUtils";
-import { groupedEventsByLocation } from "@/lib/eventUtils";
 import EventDrawer from "@/components/EventDrawer/EventDrawer";
+import {RightHandMenu} from "@/components/RightHandMenu";
+import {filterEvents} from "@/lib/eventUtils";
+
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false });
 
@@ -21,22 +21,13 @@ export default function Home() {
 
   const [category, setCategory] = useState<string>("ALL");
   const [subCategory, setSubCategory] = useState<string | null>(null);
+  const [date, setDate] = useState<Date | null>(null);
 
   const handleChange = (newCenter: L.LatLng, newZoom: number) => {
     setCenter(newCenter);
     setZoom(newZoom);
   };
-
-  const filterEvents = useMemo(() => {
-    if (category === "ALL") return events;
-
-    return eventUtil.filterEventsByCategory(events, category, subCategory);
-  }, [events, category, subCategory]);
-
-  const groupEvents = useMemo(() => {
-    eventUtil.groupedEventsByLocation(events);
-  }, [events]);
-
+  
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setSubCategory(null);
@@ -44,11 +35,16 @@ export default function Home() {
 
   const handleSubCategoryChange = (newSubCategory: string) => {
     setSubCategory(newSubCategory);
-  };
+  }
+  
+  const handleDateChange = (newDate: Date | null) => {
+    setDate(newDate);
+  }
 
   function getCurrentRadius() {
-    var mapBoundNorthEast = map.getBounds().getNorthEast();
-    var mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
+    if(!map) return 0;
+    const mapBoundNorthEast = map.getBounds().getNorthEast();
+    const mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
     return Math.ceil(mapDistance / 1000);
   }
 
@@ -86,33 +82,37 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <EventDrawer
-        isOpen={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        selectedEventId={selectedEventId}
-      />
-
-      <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-        <FilterMenu
-          center={center}
-          zoom={zoom}
-          radius={map ? getCurrentRadius() : 0}
-          selectedCategory={category}
-          selectedSubCategory={subCategory}
-          onCategoryChange={handleCategoryChange}
-          onSubCategoryChange={handleSubCategoryChange}
+      <div>
+        <EventDrawer
+            isOpen={drawerOpen}
+            onOpenChange={setDrawerOpen}
+            selectedEventId={selectedEventId}
         />
-
-        <div style={{ flex: 1 }}>
-          <MapView
-            events={filterEvents}
-            onMapReady={setMap}
-            onChange={handleChange}
-            onEventClick={handleMarkerClick}
+        <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
+          <RightHandMenu
+              center={center}
+              zoom={zoom}
+              radius={getCurrentRadius()}
+              filterMenuProps={{
+                selectedCategory: category,
+                selectedSubCategory: subCategory || "",
+                onCategoryChange: handleCategoryChange,
+                onSubCategoryChange: handleSubCategoryChange,
+              }}
+              datePickerProps={{
+                selectedDate: date,
+                onDateChange: handleDateChange,
+              }}
           />
+          <div style={{ flex: 1 }}>
+            <MapView
+                events={filterEvents(events, category, subCategory, date)}
+                onMapReady={setMap}
+                onChange={handleChange}
+                onEventClick={handleMarkerClick}
+            />
+          </div>
         </div>
       </div>
-    </div>
   );
 }

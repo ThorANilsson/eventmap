@@ -17,7 +17,7 @@ export interface SimpleEvent {
     location?: Location | null;
     category?: string | null;
     genre?: string | null;
-    date?: string | null;
+    date?: Date | null;
     imageUrl?: string | null;
     eventUrl?: string | null;
 }
