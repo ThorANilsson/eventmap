@@ -19,7 +19,7 @@ export default function WikipediaSummaryCard({
             <p className="font-medium text-xl">{wikipedia.title}</p>
           </div>
           <Button asChild variant="outline" size="icon">
-            <Link href={wikipedia.pageUrl}>
+            <Link href={wikipedia.pageUrl} target="_blank">
               <ExternalLink />
             </Link>
           </Button>

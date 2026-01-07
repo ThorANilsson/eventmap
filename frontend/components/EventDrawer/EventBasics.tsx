@@ -82,7 +82,7 @@ export default function EventBasics({
           size="lg"
           className="bg-[#0157B6] hover:bg-[#0157B6] hover:opacity-90"
         >
-          <Link href={eventBasics.eventUrl}>
+          <Link href={eventBasics.eventUrl} target="_blank">
             <span>View on Ticketmaster</span>
             <ExternalLink className="h-4 w-4" />
           </Link>
