@@ -3,6 +3,7 @@ using EventmapApi.Model.Requests;
 using EventmapApi.Model.Responses;
 using EventmapApi.Model.Ticketmaster;
 using Geohash;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.Options;
 
 
@@ -13,12 +14,17 @@ namespace EventmapApi.Services
         private Geohasher _geohasher = new  Geohasher();
         private readonly HttpClient _httpClient;
         private readonly IOptions<TicketmasterOptions> _options;
+        private readonly WikipediaService _wikipediaService;
         // API key to ticketmaster can be found in options.Value.ApiKey
 
-        public TicketmasterService(HttpClient httpClient, IOptions<TicketmasterOptions> options)
+        public TicketmasterService(
+            HttpClient httpClient, 
+            IOptions<TicketmasterOptions> options, 
+            WikipediaService wikipediaService)
         {
             _httpClient = httpClient;
             _options = options;
+            _wikipediaService = wikipediaService;
         }
 
         public async Task<GetEventsResponse?> GetEvents(GetEventsRequest request)
@@ -83,17 +89,50 @@ namespace EventmapApi.Services
             };
         }
 
-        /* public async Task<Event> GetEvent(string id)
+        public async Task<ExpandedEvent?> GetEvent(string eventId)
         {
-            string relativeUrl = $"events/{id}.json?apikey={_options.Value.ApiKey}";
-            
+            string relativeUrl = $"events/" +
+                $"{eventId}" +
+                $".json?" +
+                $"apikey={_options.Value.ApiKey}";
+
             var response = await _httpClient.GetAsync(relativeUrl);
             if (response.IsSuccessStatusCode)
             {
-                var tmResponse = response.Content.ReadFromJsonAsync<Event>();
-                return tmResponse.Result ?? new Event();
+                var tmEvent = await response.Content.ReadFromJsonAsync<Event>();
+
+                if (tmEvent == null)
+                {
+                    return null;
+                }
+
+                SimpleEvent simpleEvent = new()
+                {
+                    Id = tmEvent.Id,
+                    Name = tmEvent.Name,
+                    VenueName = tmEvent.Embedded?.Venues.First().Name,
+                    Location = tmEvent.Embedded?.Venues.First().Location,
+                    Category = tmEvent.Classifications?.First().Segment?.Name,
+                    Genre = tmEvent.Classifications?.First().Genre?.Name,
+                    Date = tmEvent.Dates?.Start?.DateTime,
+                    ImageUrl = tmEvent.Images?.FirstOrDefault()?.Url,
+                    EventUrl = tmEvent.Url
+                };
+
+                WikipediaSummary? wikipediaSummary = null;
+                if (simpleEvent.Name != null)
+                {
+                    wikipediaSummary = await _wikipediaService.GetWikipediaSummary(simpleEvent.Name);
+                }
+
+                return new ExpandedEvent
+                {
+                    Basics = simpleEvent,
+                    Wikipedia = wikipediaSummary
+                };
             }
-            throw new BadHttpRequestException($"Error in TicketmasterService: {response.StatusCode}");
-        } */
+
+            return null;
+        }
     }
 }
