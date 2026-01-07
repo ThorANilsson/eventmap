@@ -55,7 +55,7 @@ export default function EventDrawer({
             { "--initial-transform": "calc(100% + 8px)" } as React.CSSProperties
           }
         >
-          <div className="bg-zinc-50 h-full w-full grow p-5 flex flex-col rounded-[16px]">
+          <div className="bg-zinc-50 h-full w-full grow p-5 flex flex-col rounded-[16px] overflow-y-auto">
             {loading ? (
               <div className="flex justify-center h-full items-center">
                 <Loader2 className="animate-spin h-12 w-12" color="#0157B6" />
