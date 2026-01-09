@@ -5,9 +5,10 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import EventDrawer from "@/components/EventDrawer/EventDrawer";
-import {RightHandMenu} from "@/components/RightHandMenu";
 import {filterEvents} from "@/lib/eventUtils";
-
+import {AppSidebar} from "@/components/SideBar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false });
 
@@ -19,7 +20,7 @@ export default function Home() {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
-  const [category, setCategory] = useState<string>("ALL");
+  const [category, setCategory] = useState<string>("All");
   const [subCategory, setSubCategory] = useState<string | null>(null);
   const [date, setDate] = useState<Date | null>(null);
 
@@ -82,37 +83,43 @@ export default function Home() {
   }
 
   return (
-      <div>
-        <EventDrawer
-            isOpen={drawerOpen}
-            onOpenChange={setDrawerOpen}
-            selectedEventId={selectedEventId}
-        />
-        <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-          <RightHandMenu
-              center={center}
-              zoom={zoom}
-              radius={getCurrentRadius()}
-              filterMenuProps={{
-                selectedCategory: category,
-                selectedSubCategory: subCategory || "",
-                onCategoryChange: handleCategoryChange,
-                onSubCategoryChange: handleSubCategoryChange,
-              }}
-              datePickerProps={{
-                selectedDate: date,
-                onDateChange: handleDateChange,
-              }}
+      <SidebarProvider>
+        <div>
+          <EventDrawer
+              isOpen={drawerOpen}
+              onOpenChange={setDrawerOpen}
+              selectedEventId={selectedEventId}
           />
-          <div style={{ flex: 1 }}>
-            <MapView
-                events={filterEvents(events, category, subCategory, date)}
-                onMapReady={setMap}
-                onChange={handleChange}
-                onEventClick={handleMarkerClick}
-            />
+          <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
+            <div>
+              <AppSidebar
+                  selectedCategory={category}
+                  selectedSubCategory={subCategory || ""}
+                  onCategoryChange={handleCategoryChange}
+                  onSubCategoryChange={handleSubCategoryChange}
+                  datePickerProps={{
+                    selectedDate: date,
+                    onDateChange: handleDateChange,
+                  }}
+              />
+            </div>
+            <main className="flex-1 relative flex flex-col min-w-0">
+              
+              <div className="absolute top-4 left-4 z-1000">
+                <SidebarTrigger className="bg-zinc-100 shadow-md hover:bg-zinc-400" />
+              </div>
+              
+              <div className="flex flex-1 h-full">
+                <MapView
+                    events={filterEvents(events, category, subCategory, date)}
+                    onMapReady={setMap}
+                    onChange={handleChange}
+                    onEventClick={handleMarkerClick}
+                />
+              </div>
+            </main>
           </div>
         </div>
-      </div>
+      </SidebarProvider>
   );
 }

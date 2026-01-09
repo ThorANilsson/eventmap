@@ -120,3 +120,52 @@
     @apply bg-background text-foreground;
   }
 }
+
+[data-sidebar="sidebar"] {
+  background-color: #262626;
+  backdrop-filter: blur(5px) saturate(160%);
+}
+
+[data-sidebar="menu-button"] {
+  color: #f4f4f5;
+  background-color: #18181b;
+}
+
+[data-sidebar="menu-button"]:hover {
+  color: #f4f4f5;
+  background-color: #3e3e3e;
+}
+
+[data-sidebar="menu-item"] div button {
+  color: #f4f4f5;
+  background-color: #3e3e3e;
+  transition: color 0.2s, background 0.2s;
+}
+
+[data-sidebar="menu-item"] div button:hover {
+  color: #f4f4f5;
+  background-color: #18181b;
+  transition: color 0.2s, background 0.2s;
+}
+
+[data-sidebar="menu-button"][data-active="true"] {
+  background-color: #3e3e3e;
+  font-weight: 600;
+}
+
+.sub-category-active {
+  background-color: #18181b !important;
+  color: #f4f4f5 !important;
+}
+
+/* To set the specific color of the dropdown menu in the datepicker */
+[data-slot="calendar"] select option {
+  background-color: #18181b;
+  color: white;
+}
+
+[data-slot="calendar"] {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1rem;
+}

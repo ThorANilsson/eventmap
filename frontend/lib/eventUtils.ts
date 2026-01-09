@@ -2,7 +2,7 @@ import { SimpleEvent } from "@/types/simpleEvent";
 
 
 function filterEventsByCategory(events: SimpleEvent[], category: string, subCategory: string): SimpleEvent[] {
-    if(!category || category === "ALL") {
+    if(!category || category === "All") {
         return events;
     }
     

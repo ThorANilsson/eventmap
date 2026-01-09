@@ -22,9 +22,9 @@ export function Calendar22({selectedDate, onDateChange}: DatePickerProps) {
 
     return (
         <div className="flex flex-col gap-3">
-            <Label htmlFor="date" className="px-1">
-                Date:
-            </Label>
+            <div className="flex flex-col gap-3 mt-2 text-zinc-100 font-bold size-3">
+                DATE: {selectedDate ? selectedDate : null}
+            </div>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button

@@ -6,12 +6,12 @@ import {
   TileLayer,
   Marker,
   useMap,
-  useMapEvents,
+  useMapEvents, 
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 import { SimpleEvent } from "@/types/simpleEvent";
 import TicketmasterIcon from "./TicketmasterIcon";
+import L from "leaflet";
 
 interface MapViewProps {
   events: SimpleEvent[];
@@ -52,7 +52,7 @@ function MapEvents({ onChange }: MapEventsProps) {
 
 function MapInitializer({ onMapReady, onChange }) {
   const map = useMap();
-
+  
   useEffect(() => {
     onMapReady(map);
     let mapState = getMapState(map);
@@ -75,6 +75,7 @@ export default function MapView({
       minZoom={8}
       style={{ height: "100%", width: "100%" }}
       attributionControl={false}
+      zoomControl={false}
     >
       <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
 
