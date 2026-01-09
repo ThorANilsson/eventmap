@@ -19,11 +19,11 @@ export interface DatePickerProps {
 
 export function Calendar22({selectedDate, onDateChange}: DatePickerProps) {
     const [open, setOpen] = React.useState(false)
-
+    
     return (
         <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-3 mt-2 text-zinc-100 font-bold size-3">
-                DATE: {selectedDate ? selectedDate : null}
+                DATE: 
             </div>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
