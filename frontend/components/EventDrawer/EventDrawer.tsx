@@ -6,6 +6,7 @@ import { Drawer } from "vaul";
 import EventBasics from "./EventBasics";
 import WikipediaSummaryCard from "./WikipediaSummaryCard";
 import { Loader2 } from "lucide-react";
+import { baseUrl } from "@/lib/apiConfig";
 
 // Foundation for this component pulled from https://vaul.emilkowal.ski/default#side-drawer
 
@@ -24,7 +25,7 @@ export default function EventDrawer({
   const fetchEvent = async (eventId: string) => {
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:5120/Events/${eventId}`);
+      const res = await fetch(`${baseUrl}/Events/${eventId}`);
       if (!res.ok) {
         throw new Error(`API error: ${res.status}`);
       }

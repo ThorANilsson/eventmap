@@ -5,10 +5,11 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import EventDrawer from "@/components/EventDrawer/EventDrawer";
-import {filterEvents} from "@/lib/eventUtils";
-import {AppSidebar} from "@/components/SideBar";
+import { filterEvents } from "@/lib/eventUtils";
+import { AppSidebar } from "@/components/SideBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { baseUrl } from "@/lib/apiConfig";
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false });
 
@@ -28,7 +29,7 @@ export default function Home() {
     setCenter(newCenter);
     setZoom(newZoom);
   };
-  
+
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setSubCategory(null);
@@ -36,14 +37,14 @@ export default function Home() {
 
   const handleSubCategoryChange = (newSubCategory: string) => {
     setSubCategory(newSubCategory);
-  }
-  
+  };
+
   const handleDateChange = (newDate: Date | null) => {
     setDate(newDate);
-  }
+  };
 
   function getCurrentRadius() {
-    if(!map) return 0;
+    if (!map) return 0;
     const mapBoundNorthEast = map.getBounds().getNorthEast();
     const mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
     return Math.ceil(mapDistance / 1000);
@@ -54,7 +55,7 @@ export default function Home() {
       /* setLoading(true);
       setError(null); */
       const res = await fetch(
-        `http://localhost:5120/Events?Radius=${getCurrentRadius()}
+        `${baseUrl}/Events?Radius=${getCurrentRadius()}
                 &Latitude=${center.lat}
                 &Longitude=${center.lng}`
       );
@@ -83,43 +84,42 @@ export default function Home() {
   }
 
   return (
-      <SidebarProvider>
-        <div>
-          <EventDrawer
-              isOpen={drawerOpen}
-              onOpenChange={setDrawerOpen}
-              selectedEventId={selectedEventId}
-          />
-          <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
-            <div>
-              <AppSidebar
-                  selectedCategory={category}
-                  selectedSubCategory={subCategory || ""}
-                  onCategoryChange={handleCategoryChange}
-                  onSubCategoryChange={handleSubCategoryChange}
-                  datePickerProps={{
-                    selectedDate: date,
-                    onDateChange: handleDateChange,
-                  }}
+    <SidebarProvider>
+      <div>
+        <EventDrawer
+          isOpen={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          selectedEventId={selectedEventId}
+        />
+        <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
+          <div>
+            <AppSidebar
+              selectedCategory={category}
+              selectedSubCategory={subCategory || ""}
+              onCategoryChange={handleCategoryChange}
+              onSubCategoryChange={handleSubCategoryChange}
+              datePickerProps={{
+                selectedDate: date,
+                onDateChange: handleDateChange,
+              }}
+            />
+          </div>
+          <main className="flex-1 relative flex flex-col min-w-0">
+            <div className="absolute top-4 left-4 z-1000">
+              <SidebarTrigger className="bg-zinc-100 shadow-md hover:bg-zinc-400" />
+            </div>
+
+            <div className="flex flex-1 h-full">
+              <MapView
+                events={filterEvents(events, category, subCategory, date)}
+                onMapReady={setMap}
+                onChange={handleChange}
+                onEventClick={handleMarkerClick}
               />
             </div>
-            <main className="flex-1 relative flex flex-col min-w-0">
-              
-              <div className="absolute top-4 left-4 z-1000">
-                <SidebarTrigger className="bg-zinc-100 shadow-md hover:bg-zinc-400" />
-              </div>
-              
-              <div className="flex flex-1 h-full">
-                <MapView
-                    events={filterEvents(events, category, subCategory, date)}
-                    onMapReady={setMap}
-                    onChange={handleChange}
-                    onEventClick={handleMarkerClick}
-                />
-              </div>
-            </main>
-          </div>
+          </main>
         </div>
-      </SidebarProvider>
+      </div>
+    </SidebarProvider>
   );
 }
