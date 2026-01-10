@@ -10,6 +10,8 @@ import { AppSidebar } from "@/components/SideBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { baseUrl } from "@/lib/apiConfig";
+import CitySearch from "@/components/CitySearch";
+import AreaSearchButton from "@/components/AreaSearchButton";
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false });
 
@@ -25,9 +27,16 @@ export default function Home() {
   const [subCategory, setSubCategory] = useState<string | null>(null);
   const [date, setDate] = useState<Date | null>(null);
 
+  const [showSearchButton, setShowSearchButton] = useState<boolean>(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
+
   const handleChange = (newCenter: L.LatLng, newZoom: number) => {
     setCenter(newCenter);
     setZoom(newZoom);
+
+    if (!initialLoad) {
+      setShowSearchButton(true);
+    }
   };
 
   const handleCategoryChange = (newCategory: string) => {
@@ -54,6 +63,8 @@ export default function Home() {
     try {
       /* setLoading(true);
       setError(null); */
+      if (!center) return;
+
       const res = await fetch(
         `${baseUrl}/Events?Radius=${getCurrentRadius()}
                 &Latitude=${center.lat}
@@ -64,6 +75,8 @@ export default function Home() {
       }
       const data = await res.json();
       setEvents(data.events);
+
+      setShowSearchButton(false);
     } catch (err: any) {
       console.log(err);
       /* setError(err.message); */
@@ -74,9 +87,13 @@ export default function Home() {
 
   useEffect(() => {
     if (!map) return;
+    if (!center) return;
 
-    fetchEvents();
-  }, [map, center, zoom]);
+    if (initialLoad) {
+      fetchEvents();
+      setInitialLoad(false);
+    }
+  }, [map, center]);
 
   function handleMarkerClick(eventId: string) {
     setSelectedEventId(eventId);
@@ -108,6 +125,16 @@ export default function Home() {
             <div className="absolute top-4 left-4 z-1000">
               <SidebarTrigger className="bg-zinc-100 shadow-md hover:bg-zinc-400" />
             </div>
+
+            <CitySearch 
+                map={map} 
+                setCenter={setCenter} 
+            />
+
+            <AreaSearchButton 
+                showSearchButton={showSearchButton} 
+                onSearchAreaClick={fetchEvents} 
+            />
 
             <div className="flex flex-1 h-full">
               <MapView
