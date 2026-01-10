@@ -43,14 +43,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.MapOpenApi();
+app.UseStaticFiles();
+app.MapScalarApiReference("/docs", options =>
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.WithTitle("Eventmap API");
-    });
-}
+    options.WithTitle("Eventmap API");
+});
 
 app.UseCors("AllowLocal3000");
 

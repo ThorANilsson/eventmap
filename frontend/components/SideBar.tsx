@@ -129,7 +129,7 @@ export function AppSidebar({
       </SidebarContent>
       <SidebarFooter>
         <Button asChild>
-          <Link href={baseUrl + "/scalar"} target="_blank">
+          <Link href={baseUrl + "/docs"} target="_blank">
             <FileCode /> Open API docs
           </Link>
         </Button>
