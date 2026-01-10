@@ -1,0 +1,4 @@
+# This directory is needed to serve scalar docs in prod environment
+*
+# Except this file
+!.gitignore
