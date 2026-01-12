@@ -1,0 +1,234 @@
+openapi: 3.1.1
+info:
+  title: EventmapApi | v1
+  version: 1.0.0
+servers:
+  - url: http://localhost:5120/
+paths:
+  /Events:
+    get:
+      tags:
+        - Events
+      summary: Get Events
+      description: Returns Ticketmaster Events based on location.
+      parameters:
+        - name: Radius
+          in: query
+          description: Radius in kilometers from the search point
+          required: true
+          schema:
+            maximum: 2147483647
+            minimum: 1
+            pattern: ^-?(?:0|[1-9]\d*)$
+            type:
+              - integer
+              - string
+            format: int32
+        - name: Latitude
+          in: query
+          description: Search point latitude
+          required: true
+          schema:
+            maximum: 90
+            minimum: -90
+            pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+            type:
+              - number
+              - string
+            format: double
+        - name: Longitude
+          in: query
+          description: Search point longitude
+          required: true
+          schema:
+            maximum: 180
+            minimum: -180
+            pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+            type:
+              - number
+              - string
+            format: double
+      responses:
+        "200":
+          description: Returns the list of events.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/GetEventsResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetEventsResponse"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/GetEventsResponse"
+        "400":
+          description: If the query parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /Events/{eventId}:
+    get:
+      tags:
+        - Events
+      summary: Get Event by id
+      description: Returns Ticketmaster Event + Wikipedia summary if available
+      parameters:
+        - name: eventId
+          in: path
+          description: "Ticketmaster event id, should look something like this:
+            Z698xZq2Z1ked-xJv"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the event + Wikipedia summary if available.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ExpandedEvent"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpandedEvent"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ExpandedEvent"
+        "400":
+          description: If the query parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+components:
+  schemas:
+    ExpandedEvent:
+      required:
+        - basics
+      type: object
+      properties:
+        basics:
+          $ref: "#/components/schemas/SimpleEvent"
+        wikipedia:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/WikipediaSummary"
+    GetEventsResponse:
+      required:
+        - events
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/SimpleEvent"
+    Location:
+      required:
+        - latitude
+        - longitude
+      type: object
+      properties:
+        latitude:
+          type: string
+        longitude:
+          type: string
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+            - "null"
+            - string
+        title:
+          type:
+            - "null"
+            - string
+        status:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+            - "null"
+            - integer
+            - string
+          format: int32
+        detail:
+          type:
+            - "null"
+            - string
+        instance:
+          type:
+            - "null"
+            - string
+    SimpleEvent:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type:
+            - "null"
+            - string
+        venueName:
+          type:
+            - "null"
+            - string
+        location:
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/Location"
+        category:
+          type:
+            - "null"
+            - string
+        genre:
+          type:
+            - "null"
+            - string
+        date:
+          type:
+            - "null"
+            - string
+          format: date-time
+        imageUrl:
+          type:
+            - "null"
+            - string
+        eventUrl:
+          type:
+            - "null"
+            - string
+    WikipediaSummary:
+      required:
+        - pageUrl
+        - title
+        - description
+        - extract
+      type: object
+      properties:
+        pageUrl:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        extract:
+          type: string
+        imageUrl:
+          type:
+            - "null"
+            - string
+tags:
+  - name: Events
