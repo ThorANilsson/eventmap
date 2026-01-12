@@ -1,3 +1,5 @@
+[Klicka här för att komma direkt till API dokumentationen](https://thoranilsson.github.io/eventmap/)
+
 Eventmap består av två delar: backend och frontend. Det finns det vill säga ingen databas som komponent i projektet. En API-nyckel till Ticketmaster är nödvändig för att köra projektet, en sådan har bifogats i inlämningen. Eventmap kan köras lokalt på din dator på två olika vis, se nedan.
 
 ## Alternativ 1: Kör med Docker (snabbast att komma igång)
