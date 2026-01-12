@@ -28,6 +28,7 @@ export default function Home() {
   const [date, setDate] = useState<Date | null>(null);
 
   const [showSearchButton, setShowSearchButton] = useState<boolean>(false);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
 
   const handleChange = (newCenter: L.LatLng, newZoom: number) => {
@@ -61,9 +62,9 @@ export default function Home() {
 
   const fetchEvents = async () => {
     try {
-      /* setLoading(true);
-      setError(null); */
       if (!center) return;
+
+      setIsSearching(true);
 
       const res = await fetch(
         `${baseUrl}/Events?Radius=${getCurrentRadius()}
@@ -79,9 +80,8 @@ export default function Home() {
       setShowSearchButton(false);
     } catch (err: any) {
       console.log(err);
-      /* setError(err.message); */
     } finally {
-      /* setLoading(false); */
+      setIsSearching(false);
     }
   };
 
@@ -126,14 +126,12 @@ export default function Home() {
               <SidebarTrigger className="bg-zinc-100 shadow-md hover:bg-zinc-400" />
             </div>
 
-            <CitySearch 
-                map={map} 
-                setCenter={setCenter} 
-            />
+            <CitySearch map={map} setCenter={setCenter} />
 
-            <AreaSearchButton 
-                showSearchButton={showSearchButton} 
-                onSearchAreaClick={fetchEvents} 
+            <AreaSearchButton
+              isSearching={isSearching}
+              showSearchButton={showSearchButton}
+              onSearchAreaClick={fetchEvents}
             />
 
             <div className="flex flex-1 h-full">

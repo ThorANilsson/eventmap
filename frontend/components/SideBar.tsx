@@ -78,7 +78,7 @@ export function AppSidebar({
 }: SideBarProps) {
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="border-r border-gray-500/30">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>

@@ -4,17 +4,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import L from "leaflet";
+import { Map, MapPinned, Search } from "lucide-react";
 
 export default function CitySearch({ map, setCenter }: any) {
-  
   let [text, setText] = useState("");
 
   async function clickGo() {
     if (text == "") {
-        return;
+      return;
     }
 
-    let url = "https://nominatim.openstreetmap.org/search?format=json&q=" + text;
+    let url =
+      "https://nominatim.openstreetmap.org/search?format=json&q=" + text;
 
     try {
       let response = await fetch(url);
@@ -45,12 +46,12 @@ export default function CitySearch({ map, setCenter }: any) {
     <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] flex gap-2 w-[300px]">
       <Input
         placeholder="Search for a city..."
-        className="bg-white backdrop-blur-sm shadow-md border-zinc-400"
+        className="bg-white backdrop-blur-sm shadow-md"
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key == "Enter") {
-             clickGo();
+            clickGo();
           }
         }}
       />
