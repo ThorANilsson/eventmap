@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import L from "leaflet";
-import { Map, MapPinned, Search } from "lucide-react";
 
 export default function CitySearch({ map, setCenter }: any) {
   let [text, setText] = useState("");
@@ -14,8 +12,7 @@ export default function CitySearch({ map, setCenter }: any) {
       return;
     }
 
-    let url =
-      "https://nominatim.openstreetmap.org/search?format=json&q=" + text;
+    let url = "https://nominatim.openstreetmap.org/search?format=json&q=" + text;
 
     try {
       let response = await fetch(url);
@@ -30,6 +27,7 @@ export default function CitySearch({ map, setCenter }: any) {
         let lonNum = Number(lon);
 
         if (map != null) {
+          const L = (await import("leaflet")).default
           map.setView([latNum, lonNum], 12);
           setCenter(new L.LatLng(latNum, lonNum));
           setText("");
